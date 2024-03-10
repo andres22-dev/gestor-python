@@ -1,5 +1,7 @@
 #importamos la libreria que nos permitira hacer las pruebas
-
+import sys
+sys.path.append('..')
+import copy 
 import unittest
 
 #importamos el script donde establecimos la base de datos
@@ -33,3 +35,21 @@ class TestDatabase(unittest.TestCase):
     #verificando que el cliente esta creando comparando la longitud de la lista
       #si esta pues es mas grande significaria queel cliente quedo creado
     self.assertEqual(len(db.Clientes.lista), 4)
+    self.assertEqual(nuevo_cliente.dni, '39X')
+    self.assertEqual(nuevo_cliente.nombre, 'Hector')
+    self.assertEqual(nuevo_cliente.apellido, 'Costa')
+    
+    
+  def test_modificar_cliente(self):
+    cliente_a_modificar = copy.copy(db.Clientes.buscar('28Z'))
+    cliente_modificado = db.Clientes.modificar('28Z', 'Mariana', 'Garcia')
+    self.assertEqual(cliente_a_modificar.nombre, 'Ana')
+    self.assertEqual(cliente_modificado.nombre, 'Mariana')
+    
+  
+  def test_borrador_cliente(self):
+    #aqui sacamos el cliente de la lista y lo almacenamos en una variable
+    cliente_borrado = db.Clientes.borrar('48H')
+    
+    #comprobamos que ese dato esta 
+    cliente_rebuscado = db.Clientes.buscar('48H')
