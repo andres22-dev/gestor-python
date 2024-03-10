@@ -51,5 +51,8 @@ class TestDatabase(unittest.TestCase):
     #aqui sacamos el cliente de la lista y lo almacenamos en una variable
     cliente_borrado = db.Clientes.borrar('48H')
     
-    #comprobamos que ese dato esta 
+    #comprobamos que ese dato esta pero como ese 
+      #dato ya fue borrado devolveria none
     cliente_rebuscado = db.Clientes.buscar('48H')
+    self.assertEqual(cliente_borrado.dni, '48H')
+    self.assertIsNone(cliente_rebuscado)
