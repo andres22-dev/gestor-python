@@ -1,10 +1,11 @@
 #el que unira el script principal a traves del menu
   #interactuaremos con la base de datos 
-import os  
+import os 
+import helpers
 def iniciar():
   while True:
     #borramos lo que estemos ejecutando continuamente en terminal
-    os.system('clear')
+    helpers.limpiar_pantalla()
     print("================")
     print(" Bienvenido al Gestor")
     print("================")
@@ -17,7 +18,7 @@ def iniciar():
     print("================")
     
     opcion = input(">")
-    os.system('clear')
+    helpers.limpiar_pantalla
     
     if opcion == '1':
       print("Listando los clientes...\n")
