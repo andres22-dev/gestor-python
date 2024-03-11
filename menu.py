@@ -6,7 +6,6 @@ import database as db
 def iniciar():
   while True:
     #borramos lo que estemos ejecutando continuamente en terminal
-    helpers.limpiar_pantalla()
     print("================")
     print(" Bienvenido al Gestor")
     print("================")
@@ -65,7 +64,10 @@ def iniciar():
       
     elif opcion == '5':
       print("Borrando un cliente...\n")
-      #todo
+      
+      dni = helpers.leer_texto(3, 3, "DNI (2 int y 1 char)").upper()
+      
+      print("Cliente borrado correctamente")if db.Clientes.borrar(dni) else print("Cliente no encontrado")
     elif opcion == '6':
       print("Saliendo")
       break
