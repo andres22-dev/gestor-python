@@ -1,5 +1,7 @@
 #contendra funciones auxiliares de uso comun en todo el proyecto
 
+#importamos modulo expresiones regulares
+import re
 import os 
 #este modulo nos permitira identificar que sistema estamos usando
 import platform
@@ -22,3 +24,15 @@ def leer_texto(longitud_min=0, longitud_max=100, mensaje=None):
     if len(texto) >= longitud_min and len(texto) <= longitud_max:
       return texto
   
+
+def dni_valido(dni, lista):
+  #utilizando el modulo de expresiones regulares comparamos 
+    #el dni con el formato que queremos que tenga
+  if not re.match('[0-9]{2}[A-Z]$}', dni):
+    print("DNI incorrecto, debe cumplir el formato")
+    return False
+  for cliente in lista:
+    if cliente.dni == dni:
+      print("DNI utilizado por otro cliente")
+      return False
+  return True
