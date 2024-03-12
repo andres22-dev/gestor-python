@@ -28,7 +28,7 @@ def leer_texto(longitud_min=0, longitud_max=100, mensaje=None):
 def dni_valido(dni, lista):
   #utilizando el modulo de expresiones regulares comparamos 
     #el dni con el formato que queremos que tenga
-  if not re.match('[0-9]{2}[A-Z]$}', dni):
+  if not re.match('[0-9]{2}[A-Z]$', dni):
     print("DNI incorrecto, debe cumplir el formato")
     return False
   for cliente in lista:

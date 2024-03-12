@@ -3,6 +3,7 @@ import sys
 sys.path.append('..')
 import copy 
 import unittest
+import helpers
 
 #importamos el script donde establecimos la base de datos
   #al cual le pondremos un alias para abreviarlo
@@ -56,3 +57,9 @@ class TestDatabase(unittest.TestCase):
     cliente_rebuscado = db.Clientes.buscar('48H')
     self.assertEqual(cliente_borrado.dni, '48H')
     self.assertIsNone(cliente_rebuscado)
+    
+  def test_dni_valido(self):
+    self.assertTrue(helpers.dni_valido('00A',db.Clientes.lista))
+    self.assertFalse(helpers.dni_valido('372837', db.Clientes.lista))
+    self.assertFalse(helpers.dni_valido('F35', db.Clientes.lista))
+    self.assertFalse(helpers.dni_valido('48H', db.Clientes.lista))
