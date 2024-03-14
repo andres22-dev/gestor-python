@@ -2,6 +2,9 @@
   #y proveera una interfaz para crear modificar eliminar informacion
   
   
+#importamos el modulo de csv
+import csv
+  
   #creamos clase para manejar un cliente
   
 class Cliente:
@@ -28,6 +31,24 @@ class Clientes:
   #manejaremos mentodo estaticos y no utilizando instancia
     #por eso establecemos una lista en el nievel principal de la clase 
   lista = []
+
+  #parte del ejemplo csv
+  
+  #abrimos el fichero y le asignamos un alias
+  with open('clientes.csv', newline='\n') as fichero:
+    #utilizamos el modulo csv para poder interactuar con el fichero
+      #utilizamos el metodo reader que recibe el fichero y el delimitador
+        #quen es la forma en la que separamos los datos dentro del fichero
+    reader = csv.reader(fichero, delimiter=';')
+    #luego recorremos cada linea del fichero y podemos extraer cada uno
+      #de los datos separados por ; en una variable
+    for dni, nombre, apellido in reader:
+      #con estos datos creamos un cliente apartir de una instancia
+      cliente = Cliente(dni,nombre, apellido)
+      
+      #anadimos los datos ya recorridos de el csv a la lista de clientes 
+      lista.append(cliente)
+      
   
   #definimos un metodo estatico con un decorador 
   
