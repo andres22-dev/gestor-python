@@ -69,6 +69,7 @@ class Clientes:
     #luego anadimos el cliente que generamos de la instancia a nuestra lista
       #de clientes que generamos 
     Clientes.lista.append(cliente)
+    Clientes.guardar()
     return cliente
   
   
@@ -83,10 +84,31 @@ class Clientes:
           #pasando por parametro en el metodo modificar
         Clientes.lista[indice].nombre = nombre
         Clientes.lista[indice].apellido = apellido
+        Clientes.guardar()
         return Clientes.lista[indice]
   
   @staticmethod
   def borrar(dni):
     for indice, cliente in enumerate(Clientes.lista):
       if cliente.dni == dni:
-        return Clientes.lista.pop(indice)
+        cliente = Clientes.lista.pop(indice)
+        Clientes.guardar()
+        return cliente
+      
+#funcion implementada para pasar los cambios generados
+  #en los datos de los clientes para pasarlos
+    #a el archivo csv todos los datos en general 
+    
+  @staticmethod
+  def guardar():
+    #abrimos el archivo csv en modo escritura
+    with open('clientes.csv', 'w', newline="\n") as fichero:
+      #lemos el fichero y delimitamos sus datos
+      writer = csv.writer(fichero, delimiter=";")
+      #luego de eso recorremos la lista de los clientes 
+        #en la cual por cada cliente en cada linea del archivo
+          #agregaremos sus datos completos 
+      for cliente in Clientes.lista:
+        writer.writerow((cliente.dni, cliente.nombre, cliente.apellido))
+        
+      
