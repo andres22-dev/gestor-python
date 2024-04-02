@@ -4,7 +4,10 @@
   
 #importamos el modulo de csv
 import csv
-  
+
+#importamos constantes establecidas en un script alternos
+
+import config
   #creamos clase para manejar un cliente
   
 class Cliente:
@@ -35,7 +38,7 @@ class Clientes:
   #parte del ejemplo csv
   
   #abrimos el fichero y le asignamos un alias
-  with open('clientes.csv', newline='\n') as fichero:
+  with open(config.DATABASE_PATH, newline='\n') as fichero:
     #utilizamos el modulo csv para poder interactuar con el fichero
       #utilizamos el metodo reader que recibe el fichero y el delimitador
         #quen es la forma en la que separamos los datos dentro del fichero
@@ -102,7 +105,7 @@ class Clientes:
   @staticmethod
   def guardar():
     #abrimos el archivo csv en modo escritura
-    with open('clientes.csv', 'w', newline="\n") as fichero:
+    with open(config.DATABASE_PATH, 'w', newline="\n") as fichero:
       #lemos el fichero y delimitamos sus datos
       writer = csv.writer(fichero, delimiter=";")
       #luego de eso recorremos la lista de los clientes 

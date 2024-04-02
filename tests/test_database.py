@@ -1,6 +1,8 @@
 #importamos la libreria que nos permitira hacer las pruebas
 import sys
 sys.path.append('..')
+import config
+import csv 
 import copy 
 import unittest
 import helpers
@@ -63,3 +65,19 @@ class TestDatabase(unittest.TestCase):
     self.assertFalse(helpers.dni_valido('372837', db.Clientes.lista))
     self.assertFalse(helpers.dni_valido('F35', db.Clientes.lista))
     self.assertFalse(helpers.dni_valido('48H', db.Clientes.lista))
+    
+  def test_escritura_csv(self):
+    db.Clientes.borrar('48H')
+    db.Clientes.borrar('15J')
+    db.Clientes.modificar('28Z', 'Mariana', 'Garcia')
+    
+    
+    dni, nombre, apellido = None, None, None
+    
+    with open(config.DATABASE_PATH,newline="\n") as fichero:
+      reader = csv.reader(fichero, delimiter=";")
+      dni, nombre, apellido = next(reader)
+      
+    self.assertEqual(dni, '28Z')
+    self.assertEqual(nombre, 'Mariana')
+    self.assertEqual(apellido, 'Garcia')
