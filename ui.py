@@ -1,5 +1,6 @@
+import database as db
 from tkinter import *
-
+from tkinter import ttk
 class CenterWidgetMixin:
   
   #crearemos un metodo para que deje en el centro la ventana visual de tkinter
@@ -34,13 +35,56 @@ class MainWindow(Tk, CenterWidgetMixin):
       self.build()
       self.center()
   def build(self):
-    button = Button(self, text="Hola", command=self.hola)
-    button.pack()
+    #vamos a mostrar en forma de tabla la informacion de los clientes con un frame 
+    frame = Frame(self)
+    frame.pack()
+    
+    treeview = ttk.Treeview(frame)
+    
+    #configuracion de columnas 
+    treeview['columns'] = ('DNI', 'Nombre', 'Apellido')
+    
+    #borramos la primera columna que se genera por defecto
+    treeview.column('#0', width=0, stretch=NO)
+    
+    #personalizamos las otras columnas
+    
+    treeview.column('DNI',  anchor=CENTER)
+    treeview.column('Nombre',  anchor=CENTER)
+    treeview.column('Apellido',  anchor=CENTER)
   
-  def hola(self):
-    print("Hola mundo!")
-  
-  
+    #configuracion de las cabezeras o nonbres en la tabla 
+    
+    treeview.heading("DNI", text="DNI", anchor=CENTER)
+    treeview.heading("Nombre", text="Nombre", anchor=CENTER)
+    treeview.heading("Apellido", text="Apellido", anchor=CENTER)
+    
+    
+    #creamos un scroll por si la tabla es muy grande y necesitamos desplazarnos en la ventana
+    
+    scrollbar = Scrollbar(frame)
+    #establecemos la posicion del scrool y el eje x o y
+    scrollbar.pack(side=RIGHT, fill=Y)
+    treeview['yscrollcommand'] = scrollbar.set
+    
+    #importamos la base de datos y recorremos los registros
+
+    for cliente in db.Clientes.lista:
+      #insertamos los datos dentro de la tabla para
+      treeview.insert(
+        parent='',index='end',iid=cliente.dni,
+        values=(cliente.dni, cliente.nombre, cliente.apellido))
+      
+    
+    treeview.pack()
+    
+    
+    frame = Frame(self)
+    frame.pack(pady=20)
+    Button(frame, text="Crear", command=None).grid(row=0, column=0)
+    Button(frame, text="Modificar", command=None).grid(row=0, column=1)
+    Button(frame, text="Borrar", command=None).grid(row=0, column=2)
+
     
 if __name__ == "__main__":
   app = MainWindow()
