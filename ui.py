@@ -1,6 +1,7 @@
 import database as db
 from tkinter import *
 from tkinter import ttk
+from tkinter.messagebox import askokcancel, WARNING
 class CenterWidgetMixin:
   
   #crearemos un metodo para que deje en el centro la ventana visual de tkinter
@@ -83,9 +84,31 @@ class MainWindow(Tk, CenterWidgetMixin):
     frame.pack(pady=20)
     Button(frame, text="Crear", command=None).grid(row=0, column=0)
     Button(frame, text="Modificar", command=None).grid(row=0, column=1)
-    Button(frame, text="Borrar", command=None).grid(row=0, column=2)
+    Button(frame, text="Borrar", command=self.delete).grid(row=0, column=2)
 
+    #boton de borrar 
     
+    self.treeview = treeview
+    
+  #esta funcion se ejecutara al presionar el boton de borrar  
+  def delete(self):
+    
+    #haremos uso del metodo focus que se pone en marcha 
+      #cuando seleccionamos una fila de la tabla 
+    #entonces aprovecharemos este metodo para poder borrar los datos
+    cliente = self.treeview.focus()
+    if cliente:
+      #traemos los valores 
+      campos = self.treeview.item(cliente, "values")
+      #ventana emergente que nos pregunta si hacer o no la accion
+        #personalizamos los parametros de esta funcion
+      confirmar = askokcancel(
+        title="Confirmar borrado",
+        message=f"Borrar {campos[1]},{campos[2]}?",
+        icon=WARNING
+      )
+      if confirmar:
+        self.treeview.delete(cliente)
 if __name__ == "__main__":
   app = MainWindow()
   app.mainloop()
