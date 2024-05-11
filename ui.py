@@ -27,7 +27,64 @@ class CenterWidgetMixin:
     y = int(hs/2 - h/2)
     
     self.geometry(f"{w}x{h}+{x}+{y}")
+
+#creamos una clase nueva para desarrollar el popup para la crud
+  #heredamos de dos clases toplevel y centerwidget
+    #TopLevel es un widget que se encargara de manejar las subventanas
+    #El mizin lo utilizaremos para centrar las ventanas 
+
+class CreateClientWindow(Toplevel, CenterWidgetMixin):
+  #definimos el constructor
+  def __init__(self, parent):
+    super().__init__(parent)
+    self.title("crear cliente ")
+    self.build()
+    self.center()
   
+  
+  #obligamos al usuario a interactuar con la ventana 
+    #antes de ir hacia la ventana principal
+        
+    self.transient(parent)
+    self.grab_set()
+      
+      
+  #disenos de la ventana   
+  def build(self):
+    frame = Frame(self)
+    frame.pack(padx=20, pady=10)
+    
+    Label(frame, text="DNI (2 ints y 1 upper char)").grid(row=0, column=0)
+    Label(frame, text="Nombre (de 2 a 30 chars)").grid(row=0, column=1)
+    Label(frame, text="DNI (de 2 a 30 chars)").grid(row=0, column=2)
+    
+    #campos de texto
+    dni = Entry(frame)
+    dni.grid(row=1, column=0)
+    nombre = Entry(frame)
+    nombre.grid(row=1, column=1)
+    apellido = Entry(frame)
+    apellido.grid(row=1, column=2)
+    
+    
+    #crearemos otro frame 
+    
+    frame = Frame(self)
+    frame.pack(pady=10)
+    
+    #boton para generar creacion cliente
+    crear = Button(frame, text="Crear", command=self.create_client)
+    crear.configure(state=DISABLED)
+    crear.grid(row=0, column=0)
+    Button(frame, text="Cancelar", command=self.close).grid(row=0, column=1)
+  
+  
+  def create_client(self):
+    pass
+  
+  def close(self):
+    self.destroy()
+    self.update()
 class MainWindow(Tk, CenterWidgetMixin):
   def __init__(self):
 
@@ -82,7 +139,7 @@ class MainWindow(Tk, CenterWidgetMixin):
     
     frame = Frame(self)
     frame.pack(pady=20)
-    Button(frame, text="Crear", command=None).grid(row=0, column=0)
+    Button(frame, text="Crear", command=self.create).grid(row=0, column=0)
     Button(frame, text="Modificar", command=None).grid(row=0, column=1)
     Button(frame, text="Borrar", command=self.delete).grid(row=0, column=2)
 
@@ -109,6 +166,14 @@ class MainWindow(Tk, CenterWidgetMixin):
       )
       if confirmar:
         self.treeview.delete(cliente)
+        
+    
+    #creamos instancia de la subventana 
+    
+  def create(self):
+    CreateClientWindow(self)
+    
+    
 if __name__ == "__main__":
   app = MainWindow()
   app.mainloop()
