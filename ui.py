@@ -85,8 +85,17 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
     Button(frame, text="Cancelar", command=self.close).grid(row=0, column=1)
     
     
+    self.validaciones = [0, 0, 0]
+    self.crear = crear
+    self.dni = dni
+    self.nombre = nombre
+    self.apellido = apellido
+    
   def create_client(self):
-    pass
+    self.master.treeview.insert(
+        parent='',index='end',iid=self.dni.get(),
+        values=(self.dni.get(), self.nombre.get(), self.apellido.get()))
+    self.close()
   
   def close(self):
     self.destroy()
@@ -94,7 +103,7 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
     
   #definimos nuestra funcion para validar los datos
   
-  def validate(sel, event, index):
+  def validate(self, event, index):
     
     #traemos el valor del widget en el que se encuentra
     
@@ -104,6 +113,7 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
       if valido:
         #si es valido pintamos de verde el campo
         event.widget.configure({"bg":"Green"})
+        self.validaciones[index] = valido
       else:
         event.widget.configure({"bg":"Red"})
     if index == 1:
@@ -111,6 +121,7 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
       if valido:
         #si es valido pintamos de verde el campo
         event.widget.configure({"bg":"Green"})
+        self.validaciones[index] = valido
       else:
         event.widget.configure({"bg":"Red"})
     if index == 2:
@@ -118,8 +129,13 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
       if valido:
         #si es valido pintamos de verde el campo
         event.widget.configure({"bg":"Green"})
+        self.validaciones[index] = valido
       else:
         event.widget.configure({"bg":"Red"})
+        
+      #Cambiaremos el estado del boton con base a las validaciones 
+      self.crear.config(state=NORMAL if self.validaciones == [1,1,1] else DISABLED)
+      
         
       
         
