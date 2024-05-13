@@ -1,4 +1,5 @@
 import database as db
+import helpers
 from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import askokcancel, WARNING
@@ -56,15 +57,20 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
     
     Label(frame, text="DNI (2 ints y 1 upper char)").grid(row=0, column=0)
     Label(frame, text="Nombre (de 2 a 30 chars)").grid(row=0, column=1)
-    Label(frame, text="DNI (de 2 a 30 chars)").grid(row=0, column=2)
+    Label(frame, text="Apellido (de 2 a 30 chars)").grid(row=0, column=2)
     
     #campos de texto
     dni = Entry(frame)
     dni.grid(row=1, column=0)
+    dni.bind("<KeyRelease>", lambda event: self.validate(event,0))
+    
     nombre = Entry(frame)
     nombre.grid(row=1, column=1)
+    nombre.bind("<KeyRelease>", lambda event: self.validate(event, 1))
+    
     apellido = Entry(frame)
     apellido.grid(row=1, column=2)
+    apellido.bind("<KeyRelease>", lambda event: self.validate(event,2))
     
     
     #crearemos otro frame 
@@ -77,14 +83,46 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
     crear.configure(state=DISABLED)
     crear.grid(row=0, column=0)
     Button(frame, text="Cancelar", command=self.close).grid(row=0, column=1)
-  
-  
+    
+    
   def create_client(self):
     pass
   
   def close(self):
     self.destroy()
     self.update()
+    
+  #definimos nuestra funcion para validar los datos
+  
+  def validate(sel, event, index):
+    
+    #traemos el valor del widget en el que se encuentra
+    
+    valor = event.widget.get()
+    if index == 0:
+      valido = helpers.dni_valido(valor, db.Clientes.lista)
+      if valido:
+        #si es valido pintamos de verde el campo
+        event.widget.configure({"bg":"Green"})
+      else:
+        event.widget.configure({"bg":"Red"})
+    if index == 1:
+      valido = valor.isalpha() and len(valor) >= 2 and len(valor) <=30
+      if valido:
+        #si es valido pintamos de verde el campo
+        event.widget.configure({"bg":"Green"})
+      else:
+        event.widget.configure({"bg":"Red"})
+    if index == 2:
+      valido = valor.isalpha() and len(valor) >= 2 and len(valor) <=30
+      if valido:
+        #si es valido pintamos de verde el campo
+        event.widget.configure({"bg":"Green"})
+      else:
+        event.widget.configure({"bg":"Red"})
+        
+      
+        
 class MainWindow(Tk, CenterWidgetMixin):
   def __init__(self):
 
