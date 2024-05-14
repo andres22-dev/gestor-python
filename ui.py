@@ -138,22 +138,14 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
       
         
 class EditClientWindow(Toplevel, CenterWidgetMixin):
-  #definimos el constructor
   def __init__(self, parent):
     super().__init__(parent)
-    self.title("crear cliente ")
+    self.title("actualizar cliente ")
     self.build()
     self.center()
-  
-  
-  #obligamos al usuario a interactuar con la ventana 
-    #antes de ir hacia la ventana principal
-        
     self.transient(parent)
     self.grab_set()
       
-      
-  #disenos de la ventana   
   def build(self):
     frame = Frame(self)
     frame.pack(padx=20, pady=10)
@@ -162,59 +154,45 @@ class EditClientWindow(Toplevel, CenterWidgetMixin):
     Label(frame, text="Nombre (de 2 a 30 chars)").grid(row=0, column=1)
     Label(frame, text="Apellido (de 2 a 30 chars)").grid(row=0, column=2)
     
-    #campos de texto
     dni = Entry(frame)
     dni.grid(row=1, column=0)
-    dni.bind("<KeyRelease>", lambda event: self.validate(event,0))
     
     nombre = Entry(frame)
     nombre.grid(row=1, column=1)
-    nombre.bind("<KeyRelease>", lambda event: self.validate(event, 1))
+    nombre.bind("<KeyRelease>", lambda event: self.validate(event, 0))
     
     apellido = Entry(frame)
     apellido.grid(row=1, column=2)
-    apellido.bind("<KeyRelease>", lambda event: self.validate(event,2))
-    
-    
-    #crearemos otro frame 
+    apellido.bind("<KeyRelease>", lambda event: self.validate(event, 1))
     
     frame = Frame(self)
     frame.pack(pady=10)
     
-    #boton para generar creacion cliente
-    crear = Button(frame, text="Crear", command=self.create_client)
-    crear.configure(state=DISABLED)
-    crear.grid(row=0, column=0)
+    actualizar = Button(frame, text="Crear", command=self.edit_client)
+    actualizar.grid(row=0, column=0)
     Button(frame, text="Cancelar", command=self.close).grid(row=0, column=1)
     
     
-    self.validaciones = [0, 0, 0]
-    self.crear = crear
+    self.validaciones = [1,1]
+    self.actualizar = actualizar
     self.dni = dni
     self.nombre = nombre
     self.apellido = apellido
     
-  def create_client(self):
-    self.master.treeview.insert(
-        parent='',index='end',iid=self.dni.get(),
-        values=(self.dni.get(), self.nombre.get(), self.apellido.get()))
+  def edit_client(self):
+    #TODO
     self.close()
   
   def close(self):
     self.destroy()
     self.update()
-    
-  #definimos nuestra funcion para validar los datos
-  
+
   def validate(self, event, index):
-    
-    #traemos el valor del widget en el que se encuentra
     
     valor = event.widget.get()
     if index == 0:
       valido = helpers.dni_valido(valor, db.Clientes.lista)
       if valido:
-        #si es valido pintamos de verde el campo
         event.widget.configure({"bg":"Green"})
         self.validaciones[index] = valido
       else:
@@ -222,7 +200,6 @@ class EditClientWindow(Toplevel, CenterWidgetMixin):
     if index == 1:
       valido = valor.isalpha() and len(valor) >= 2 and len(valor) <=30
       if valido:
-        #si es valido pintamos de verde el campo
         event.widget.configure({"bg":"Green"})
         self.validaciones[index] = valido
       else:
@@ -230,14 +207,11 @@ class EditClientWindow(Toplevel, CenterWidgetMixin):
     if index == 2:
       valido = valor.isalpha() and len(valor) >= 2 and len(valor) <=30
       if valido:
-        #si es valido pintamos de verde el campo
         event.widget.configure({"bg":"Green"})
         self.validaciones[index] = valido
       else:
         event.widget.configure({"bg":"Red"})
-        
-      #Cambiaremos el estado del boton con base a las validaciones 
-      self.crear.config(state=NORMAL if self.validaciones == [1,1,1] else DISABLED)  
+        self.crear.config(state=NORMAL if self.validaciones == [1,1,1] else DISABLED)  
         
 class MainWindow(Tk, CenterWidgetMixin):
   def __init__(self):
