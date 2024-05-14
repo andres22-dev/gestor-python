@@ -138,6 +138,7 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
       
         
 class EditClientWindow(Toplevel, CenterWidgetMixin):
+  
   def __init__(self, parent):
     super().__init__(parent)
     self.title("actualizar cliente ")
@@ -165,6 +166,16 @@ class EditClientWindow(Toplevel, CenterWidgetMixin):
     apellido.grid(row=1, column=2)
     apellido.bind("<KeyRelease>", lambda event: self.validate(event, 1))
     
+    
+    #obtendremos los datos que seleccionamos en la tabla de clientes 
+    
+    cliente = self.master.treeview.focus()
+    campos = self.master.treeview.item(cliente, 'values')
+    dni.insert(0, campos[0])
+    dni.config(state=DISABLED)
+    nombre.insert(0, campos[1])
+    apellido.insert(0, campos[2])
+    
     frame = Frame(self)
     frame.pack(pady=10)
     
@@ -180,7 +191,9 @@ class EditClientWindow(Toplevel, CenterWidgetMixin):
     self.apellido = apellido
     
   def edit_client(self):
-    #TODO
+    cliente = self.master.treeview.focus()
+    #sobre escribiremos la informacion ya registrada
+    self.master.treeview.item(cliente, values=(self.dni.get(), self.nombre.get(), self.apellido.get()))
     self.close()
   
   def close(self):
@@ -191,7 +204,7 @@ class EditClientWindow(Toplevel, CenterWidgetMixin):
     
     valor = event.widget.get()
     if index == 0:
-      valido = helpers.dni_valido(valor, db.Clientes.lista)
+      valido = valor.isalpha() and len(valor) >= 2 and len(valor) <=30
       if valido:
         event.widget.configure({"bg":"Green"})
         self.validaciones[index] = valido
@@ -204,14 +217,7 @@ class EditClientWindow(Toplevel, CenterWidgetMixin):
         self.validaciones[index] = valido
       else:
         event.widget.configure({"bg":"Red"})
-    if index == 2:
-      valido = valor.isalpha() and len(valor) >= 2 and len(valor) <=30
-      if valido:
-        event.widget.configure({"bg":"Green"})
-        self.validaciones[index] = valido
-      else:
-        event.widget.configure({"bg":"Red"})
-        self.crear.config(state=NORMAL if self.validaciones == [1,1,1] else DISABLED)  
+        self.actualizar.config(state=NORMAL if self.validaciones == [1,1] else DISABLED)  
         
 class MainWindow(Tk, CenterWidgetMixin):
   def __init__(self):
@@ -302,7 +308,9 @@ class MainWindow(Tk, CenterWidgetMixin):
     CreateClientWindow(self)
     
   def edit(self):
-    EditClientWindow(self)
+  #validaremos primeramente si hay un cliente seleccionado en
+    if self.treeview.focus():
+      EditClientWindow(self)
     
 if __name__ == "__main__":
   app = MainWindow()
